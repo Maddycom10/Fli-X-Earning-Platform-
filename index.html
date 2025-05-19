@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en,ef">
+<head>
+  <meta charset="UTF-8" />
+  <link ref="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fli-X Earning Platform</title>
+  <style>
+    /* Reset & base */
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color:rgb(3, 1, 36);
+      background-image: 
+      url(' Fli-X background.png  '); 
+        background-size: cover; 
+        background-position:center;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      
+    }
+    .container {
+      max-width: 420px;
+      width: 100%;
+      padding: 20px;
+    }
+    h2 {
+      margin-bottom: 15px;
+      color:rgb(88, 76, 255);
+      text-align: center;
+      user-select: none;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      border-radius: 5px;
+      border: none;
+      font-size: 1rem;
+      outline-offset: 2px;
+      outline-color:rgb(94, 76, 255);
+      transition: outline-color 0.3s ease;
+    }
+    input:focus, select:focus {
+      outline-color:rgb(0, 4, 255);
+    }
+    input, select {
+      background: #fff;
+      color: #000;
+    }
+    button {
+      background:rgb(25, 0, 255);
+      color: #fff;
+      cursor: pointer;
+      font-weight: 700;
+      user-select: none;
+      transition: background-color 0.3s ease;
+      border: 2px solidrgb(47, 0, 255);
+    }
+    
+    button:hover {
+      background-color:rgb(20, 0, 204);
+      border-color:rgb(0, 14, 204);
+    }
+    .hidden {
+      display: none !important;
+    }
+    /* Nav Drawer & Popup */
+    .nav-button {
+      position: fixed;
+      top: 15px;
+      left: 15px;
+      background:rgb(2, 0, 139);
+      color: #fff;
+      padding: 12px 16px;
+      border-radius: 6px;
+      font-size: 22px;
+      font-weight: 900;
+      cursor: pointer;
+      z-index: 1100;
+      user-select: none;
+      box-shadow: 0 0 8px rgba(0, 4, 255, 0.67);
+      transition: background-color 0.3s ease;
+    }
+   
+    .nav-button:hover {
+      background:rgb(31, 28, 231);
+    }
+    .nav-drawer {
+      position: fixed;
+      top: 0; left: 0;
+      width: 260px;
+      height: 100vh;
+      background:rgb(0, 4, 64);
+      box-shadow: 3px 0 10px rgba(0, 0, 0, 0.6);
+      transform: translateX(-280px);
+      transition: transform 0.3s ease;
+      z-index: 1099;
+      display: flex;
+      flex-direction: column;
+      padding: 20px 10px;
+      user-select: none;
+    }
+    .nav-drawer.open {
+      transform: translateX(0);
+    }
+    .drawer-content button {
+      background: none;
+      border: none;
+      color:rgb(117, 102, 255);
+      font-weight: 600;
+      font-size: 16px;
+      padding: 12px 18px;
+      margin-bottom: 10px;
+      text-align: left;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: background-color 0.25s ease;
+    }
+    .drawer-content button:hover {
+      background:rgb(3, 0, 170);
+      color: #fff;
+      box-shadow: 0 0 8px rgba(55, 0, 255, 0.67);
+    }
+    /* Dashboard Header and Balance */
+    .dashboard-header {
+      background:rgb(21, 0, 139);
+      padding: 4px 3px;
+      border-radius: 4px;
+      font-weight: 700;
+      font-size: 0.6rem;
+      text-align: right;
+      margin-bottom: 15px;
+      user-select: none;
+      box-shadow: 0 0 12px rgba(4, 0, 255, 0.47);
+    }
+    .amount-box {
+      background:rgb(11, 0, 160);
+      padding: 20px 17px;
+      border-radius: 12px;
+      font-weight: 800;
+      font-size: 2.5rem;
+      text-align: center;
+      margin-bottom: 20px;
+      user-select: none;
+      box-shadow: 0 0 14px rgba(47, 0, 255, 0.6);
+    }
+    /* Task Categories */
+    .task-category {
+      margin-bottom: 20px;
+      background:rgb(12, 0, 77);
+      border-radius: 10px;
+      padding: 12px 15px;
+      box-shadow: inset 0 0 10px rgba(0, 2, 112, 0.53);
+    }
+    .task-category strong {
+      color:rgb(115, 76, 255);
+      font-size: 1.1rem;
+      display: block;
+      margin-bottom: 8px;
+      user-select: none;
+    }
+    .task-link {
+      display: block;
+      color:rgb(112, 102, 255);
+      margin-bottom: 7px;
+      cursor: pointer;
+      text-decoration: none;
+      border-radius: 6px;
+      padding: 8px 12px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    .task-link:hover {
+      background-color:rgb(55, 0, 255);
+      color: #fff;
+      box-shadow: 0 0 8px rgba(76, 0, 255, 0.8);
+    }
+    /* Popup */
+    .popup {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.95);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1200;
+      padding: 20px;
+    }
+    .popup-content {
+      background: #fff;
+      color: #000;
+      border-radius: 12px;
+      max-width: 450px;
+      width: 100%;
+      padding: 25px;
+      box-shadow: 0 0 18pxrgba(17, 0, 255, 0.67);
+      position: relative;
+      max-height: 80vh;
+      overflow-y: auto;
+      user-select: text;
+    }
+    .popup-content button.close-btn {
+      position: absolute;
+      top: 12px;
+      right: 15px;
+      background:rgb(47, 0, 255);
+      border: none;
+      color: #fff;
+      font-weight: 900;
+      font-size: 20px;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      cursor: pointer;
+      line-height: 0;
+      transition: background-color 0.3s ease;
+      user-select: none;
+    }
+    .popup-content button.close-btn:hover {
+      background:rgb(31, 0, 204);
+    }
+    /* Inputs inside popup */
+    .popup-content input, .popup-content select {
+      margin-bottom: 12px;
+      font-size: 1rem;
+    }
+    /* Scrollbar for popup */
+    .popup-content::-webkit-scrollbar {
+      width: 6px;
+    }
+    .popup-content::-webkit-scrollbar-thumb {
+      background:rgba(17, 0, 255, 0.8);
+      border-radius: 10px;
+    }
+    /* Responsive */
+    @media (max-width: 460px) {
+      .container {
+        max-width: 100vw;
+        padding: 15px;
+      }
+      .nav-drawer {
+        width: 80vw;
+        max-width: 280px;
+      }
+    }
+   
+  </style>
+</head>
+<body>
+  <!-- Navigation Toggle -->
+  
+  <!-- Login Page -->
+  
+  <div id="loginPage" class="container" aria-label="Login page">
+     <h1 style="color:rgb(208, 255, 0);"><center>Fli-X Earning Platform</h1>
+    <div class="form-group">
+      <label for="loginUsername">Username</label>
+      <input type="text" id="loginUsername" autocomplete="username" required />
+    </div>
+    <div class="form-group">
+      <label for="loginPassword">Password</label>
+      <input type="password" id="loginPassword" autocomplete="current-password" required />
+    </div>
+    <button id="loginBtn">Login</button>
+    <p style="margin-top: 15px; text-align:center;">
+      Don't have an account? <span style="color:rgb(208, 255, 0); cursor:pointer;" onclick="showSignUp()" role="button" tabindex="0">Sign up here</span>
+    </p>
+    <div id="support" class="form-group" >
+               
+                
+                <p><center>Need help.....? <p><a href="https://mail.google.com/mail/?view=cm&fs=1&to=Fli-X.cashy@gmail.com" target="_blank">
+                    <i class="fas fa-headset"></i>
+                  
+                  <strong style="color:rgb(208, 255, 0); cursor:pointer;"><center>Contact Help Desk</strong>
+                </a>
+               
+            </div>
+  </div>
+  <!-- Signup Page -->
+  <div id="signUpPage" class="container hidden" aria-label="Sign up page">
+     <h1 style="color:rgb(208, 255, 0);"><center>Fli-X Earning Platform</h1>
+    <div class="form-group">
+      <label for="fullName">Full Name</label>
+      <input type="text" id="fullName" autocomplete="name" required />
+    </div>
+    <div class="form-group">
+      <label for="signUpUsername">Username</label>
+      <input type="text" id="signUpUsername" autocomplete="username" required />
+    </div>
+    <div class="form-group">
+      <label for="phone">Phone No</label>
+      <input type="tel" id="phone" autocomplete="tel" required pattern="^[0-9+\-\s]{6,15}$" title="Enter valid phone number" />
+    </div>
+    <div class="form-group">
+      <label for="signUpPassword">Password</label>
+      <input type="password" id="signUpPassword" autocomplete="new-password" required minlength="6" />
+    </div>
+    <div class="form-group">
+      <label for="confirmPassword">Confirm Password</label>
+      <input type="password" id="confirmPassword" autocomplete="new-password" required minlength="6" />
+    </div>
+    <button id="signUpBtn">Sign Up</button>
+    <p style="margin-top: 15px; text-align:center;">
+      Already have an account? <span style="color:#ff4c4c; cursor:pointer;" onclick="showLogin()" role="button" tabindex="0">Login here</span>
+    </p>
+  </div>
+  <!-- Dashboard Page -->
+  <div id="dashboardPage" class="container hidden" aria-label="User dashboard">
+  <div class="nav-button" id="navToggleBtn" aria-label="Open navigation menu" title="Menu">☰</div>
+ <h1 style="color:rgb(208, 255, 0);"><center>Fli-X Earning Platform</h1>
+    <div class="dashboard-header" id="welcomeMsg" aria-live="polite"><h6>Welcome, User</div>
+    <div class="amount-box" id="amountBox" aria-live="polite">NGN 0</div>
+    <button onclick="showPopup('deposit')">Deposit</button>
+    <button onclick="showPopup('withdraw')">Withdraw</button>
+    <section class="task-category" aria-label="Tasks category Like TikTok Video">
+      <strong style="color:rgb(208, 255, 0);"><center>Like TikTok Video</strong>
+      <div id="task1" role="list"></div>
+    </section>
+    <section class="task-category" aria-label="Tasks category Share/Repost TikTok Video">
+      <strong style="color:rgb(208, 255, 0);"><center>Share/Repost TikTok Video</strong>
+      <div id="task2" role="list"></div>
+    </section>
+    <section class="task-category" aria-label="Tasks category View/Follow">
+      <strong style="color:rgb(208, 255, 0);"><center>View/Follow</strong>
+      <div id="task3" role="list"></div>
+    </section>
+  </div>
+  <!-- Popup Overlay -->
+  <div id="popup" class="popup" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="popup-content" id="popupContent" tabindex="0" role="document">
+      <button class="close-btn" aria-label="Close popup" id="popupCloseBtn">&times;</button>
+    </div>
+  </div>
+  <!-- Navigation Drawer -->
+  <nav id="navDrawer" class="nav-drawer" aria-label="Navigation drawer" aria-hidden="true">
+    <div class="drawer-content">
+      <button onclick="openSection('dashboard')">Dashboard</button>
+      <button onclick="showPopup('account')">Account Setting</button>
+      <button onclick="showPopup('upgrade')">Upgrade Plan</button>
+      <button onclick="showPopup('loan')">Loans</button>
+      <button onclick="showPopup('ads')">Social Advertising</button>
+      <button onclick="showPopup('referral')">Referral</button>
+      <button onclick="showPopup('transactions')">Transactions History</button>
+      <button onclick="showPopup('winning')">Winning History</button>
+      <button onclick="showPopup('support')" >Help Desk</button>
+      <button onclick="toggleDrawer()" style="color:rgb(208, 255, 0);">Copyright@Fli-X2025</button>
+    </div>
+   
+  </nav>
+  <script>
+    // State
+    function showSignUpPage() {
+  document.getElementById('loginPage').classList.add('hidden');
+  document.getElementById('signUpPage').classList.remove('hidden');
+}
+
+function showLoginPage() {
+  document.getElementById('signUpPage').classList.add('hidden');
+  document.getElementById('loginPage').classList.remove('hidden');
+}
+
+    let user = null;
+    let balance = 0;
+    let winningHistory = [];
+    // Elements
+    const loginPage = document.getElementById('loginPage');
+    const signUpPage = document.getElementById('signUpPage');
+    const dashboardPage = document.getElementById('dashboardPage');
+    const navToggleBtn = document.getElementById('navToggleBtn');
+    const navDrawer = document.getElementById('navDrawer');
+    const popup = document.getElementById('popup');
+    const popupContent = document.getElementById('popupContent');
+    const popupCloseBtn = document.getElementById('popupCloseBtn');
+    
+    // Show Login or Signup Page
+    function showLogin() {
+      loginPage.classList.remove('hidden');
+      signUpPage.classList.add('hidden');
+      dashboardPage.classList.add('hidden');
+      navDrawer.classList.remove('open');
+      navDrawer.setAttribute('aria-hidden', 'true');
+      navToggleBtn.style.display = 'block';
+      popup.style.display = 'none';
+    }
+    
+    function showSignUp() {
+      loginPage.classList.add('hidden');
+      signUpPage.classList.remove('hidden');
+      dashboardPage.classList.add('hidden');
+      navDrawer.classList.remove('open');
+      navDrawer.setAttribute('aria-hidden', 'true');
+      navToggleBtn.style.display = 'block';
+      popup.style.display = 'none';
+    }
+    
+    function showDashboard() {
+      loginPage.classList.add('hidden');
+      signUpPage.classList.add('hidden');
+      dashboardPage.classList.remove('hidden');
+      navToggleBtn.style.display = 'block';
+      navDrawer.setAttribute('aria-hidden', 'false');
+      updateDashboard();
+    }
+    
+    // LocalStorage Keys
+    const USERS_KEY = 'usersData';
+    const SESSION_KEY = 'loggedInUser';
+    const BALANCE_KEY = 'userBalance';
+    const WINNING_KEY = 'winningHistory';
+    
+    // Load users from localStorage
+    function getUsers() {
+      let usersJSON = localStorage.getItem(USERS_KEY);
+      return usersJSON ? JSON.parse(usersJSON) : [];
+    }
+    
+    function saveUsers(users) {
+      localStorage.setItem(USERS_KEY, JSON.stringify(users));
+    }
+    
+    // Save session
+    function saveSession(username) {
+      localStorage.setItem(SESSION_KEY, username);
+    }
+    
+    function clearSession() {
+      localStorage.removeItem(SESSION_KEY);
+    }
+    function toggleForms(form) {
+  document.getElementById('loginPage').style.display = form === 'loginPage' ? 'block' : 'none';
+  document.getElementById('signUpPage').style.display = form === 'signUpPage' ? 'block' : 'none';
+}
+
+    // Get session user
+    function getSessionUser() {
+      return localStorage.getItem(SESSION_KEY);
+    }
+    
+    // Save balance
+    function saveBalance(amount) {
+      localStorage.setItem(BALANCE_KEY, amount);
+    }
+    
+    // Get balance
+    function getBalance() {
+      let b = localStorage.getItem(BALANCE_KEY);
+      return b ? parseFloat(b) : 0;
+    }
+    
+    // Save winning history
+    function saveWinningHistory(arr) {
+      localStorage.setItem(WINNING_KEY, JSON.stringify(arr));
+    }
+    
+    // Get winning history
+    function getWinningHistory() {
+      let data = localStorage.getItem(WINNING_KEY);
+      return data ? JSON.parse(data) : [];
+    }
+    
+    // Validate username (no spaces, min 3 chars)
+    function validUsername(u) {
+      return /^[a-zA-Z0-9_-]{3,15}$/.test(u);
+    }
+    
+    // Validate password (min 6 chars)
+    function validPassword(p) {
+      return p.length >= 6;
+    }
+    
+    // Show error message alert
+    function alertError(msg) {
+      alert(msg);
+    }
+     
+    // Show welcome and balance
+    function updateDashboard() {
+      if (!user) return;
+      document.getElementById('welcomeMsg').textContent = `Welcome, ${user.fullName}`;
+      balance = getBalance();
+      document.getElementById('amountBox').textContent = `NGN ${balance.toFixed(2)}`;
+      populateTasks();
+    }
+     function showNotification(message) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.style.display = 'block';
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000); // Hide after 3 seconds
+        }
+    // Populate tasks inside categories
+    function populateTasks() {
+      const tasks1 = [
+        {id:'task1a', label:'Like Video ', url:'https://www.tiktok.com/@pixel.medla.hub/photo/7491659612639333638?is_from_webapp=1&sender_device=pc', reward:5},
+        {id:'task1b', label:'Like Video ', url:'https://www.tiktok.com/@taomaa/video/7465057848838425878?is_from_webapp=1&sender_device=pc', reward:5},
+        {id:'task1c', label:'Like Video ', url:'https://www.tiktok.com/@pixel.medla.hub/photo/7494300865466076471?is_from_webapp=1&sender_device=pc', reward:5},
+         {id:'task1d', label:'Like Video ', url:'https://www.tiktok.com/@jamacobiz/video/7335919137979436294?is_from_webapp=1&sender_device=pc', reward:5},
+      ];
+      const tasks2 = [
+        {id:'task2a', label:'Share Video ', url:'https://www.tiktok.com/@jamacobiz/video/7335919137979436294?is_from_webapp=1&sender_device=pc', reward:10},
+        {id:'task2b', label:'Share Video ', url:'https://www.tiktok.com/@pixel.medla.hub/photo/7494300865466076471?is_from_webapp=1&sender_device=pc', reward:10},
+         {id:'task2c', label:'Like Video ', url:'https://www.tiktok.com/@taomaa/video/7465057848838425878?is_from_webapp=1&sender_device=pc', reward:5},
+          {id:'task2d', label:'Like Video ', url:'https://www.tiktok.com/@jamacobiz/video/7335919137979436294?is_from_webapp=1&sender_device=pc', reward:5},
+      ];
+      const tasks3 = [
+        {id:'task3a', label:'Follow Account ', url:'https://www.tiktok.com/@pixel.medla.hub/photo/7494300865466076471?is_from_webapp=1&sender_device=pc', reward:7},
+        {id:'task3b', label:'Follow Account ', url:'https://www.tiktok.com/@taomaa/video/7465057848838425878?is_from_webapp=1&sender_device=pc', reward:7},
+
+      ];
+      const container1 = document.getElementById('task1');
+      const container2 = document.getElementById('task2');
+      const container3 = document.getElementById('task3');
+      container1.innerHTML = '';
+      container2.innerHTML = '';
+      container3.innerHTML = '';
+      function createTaskLink(task) {
+        const a = document.createElement('a');
+        a.href = task.url;
+        a.textContent = `${task.label} (+NGN ${task.reward})`;
+        a.className = 'task-link';
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        a.setAttribute('role', 'listitem');
+        // Clicking rewards user
+        a.addEventListener('click', (e) => {
+          e.preventDefault();
+          if (confirm(`Open task: ${task.label}?\nYou will earn NGN ${task.reward} if you complete it.`)) {
+            window.open(task.url, '_blank', 'noopener');
+            rewardUser(task.reward);
+          }
+        });
+        return a;
+      }
+      tasks1.forEach(t => container1.appendChild(createTaskLink(t)));
+      tasks2.forEach(t => container2.appendChild(createTaskLink(t)));
+      tasks3.forEach(t => container3.appendChild(createTaskLink(t)));
+    }
+    
+    // Reward user for task completion
+    function rewardUser(amount) {
+      balance += amount;
+      saveBalance(balance);
+      document.getElementById('amountBox').textContent = `NGN ${balance.toFixed(2)}`;
+      alert(`Congrats! You've earned NGN ${amount}`);
+    }
+    // Show popup content by key
+    function showPopup(key) {
+      popupContent.innerHTML = `<button class="close-btn" aria-label="Close popup" id="popupCloseBtn">&times;</button>`;
+      let html = '';
+      switch(key) {
+        case 'account':
+          html = `
+            <h2>Profile Details</h2>
+            <p><strong>Full Name:</strong> ${user.fullName}</p>
+            <p><strong>Username:</strong> ${user.username}</p>
+            <p><strong>Phone:</strong> ${user.phone}</p>
+          
+                <h3>Enter Bank Details</h3>
+                <form id="bank-details-form">
+                 <select id="BankType">  
+                 <h5>Bank Name:</h5>
+                 <option value="select">Select.....</option>
+                    <option value="Opay">Opay</option>
+                    <option value="Palmpay">Palmpay</option>
+                    </select>
+                    <input type="text" id="holder's-name" placeholder="Holder's Name" required><br>
+                    <input type="number" id="account-number" placeholder="Account Number" required><br>
+                     <input type="number" id="Bpc Code" placeholder="BPC Code" required><br>
+                     <p><center>Note: if payment is deposited successfully you will receive a BPC code via Sms<p>
+                   <button type="button" onclick="saveBankDetails()">Save Bank Details</button>
+                     <button id="logoutBtn" style="margin-top:20px; background:rgb(208, 255, 0); font-weight:700;">Logout</button>
+          
+          `;
+          break;
+        case 'upgrade':
+          html = `
+            <h2>Upgrade Plan</h2>
+            <p><center>Upgrade your plan to unlock more earning tasks and higher rewards.
+            <center><br>Note:<br>Basic Plan -  These plan will expire immediately after 2 months <br> 
+              Silver Plan - These plan will expire immediately after 5 months <br> 
+              Gold Plan - These plan will expire immediately after 8 months<p></p>
+            <select id="upgradeSelect" aria-label="Choose upgrade plan">
+              <option value="Intership">Basic Plan - 5000</option>
+              ]
+              <option value="VIP">Silver Plan - NGN 10000</option>
+              
+              <option value="PRO">Gold Plan - NGN 15000</option>
+              
+            </select>
+            <button id="upgradeBtn" style="margin-top: 15px;">Upgrade</button>
+          `;
+          break;
+        case 'loan':
+          html = `
+            <h2>Loans</h2>
+            <p><center>You can request a loan up to NGN 5000.</p>
+            <input type="number" id="loanAmount" min="100" max="5000" placeholder="Enter amount" aria-label="Loan amount" />
+            <button id="loanRequestBtn" style="margin-top: 15px;">Request Loan</button>
+          `;
+          break;
+        case 'ads':
+          html = `
+            <h2>Social Advertising</h2>
+            <p><center>Advertise your products and services here.</p>
+            <textarea id="adText" rows="5" placeholder="Write your ad here..." style="width:100%; padding:8px; border-radius:6px; border:1px solid #ccc;"></textarea>
+            <button id="submitAdBtn" style="margin-top: 15px;">Submit Ad</button>
+          `;
+          break;
+        case 'transactions':
+          html = `<h2>Transactions History</h2>`;
+          const history = JSON.parse(localStorage.getItem('transactions')) || [];
+          if(history.length === 0){
+            html += `<p>No transactions yet.</p>`;
+          } else {
+            html += `<ul>`;
+            history.forEach(t => {
+              html += `<li>${t.date} - ${t.type}: NGN ${t.amount.toFixed(2)}</li>`;
+            });
+            html += `</ul>`;
+          }
+          break;
+          
+        case 'deposit':
+          html = `
+           <h2><center>Deposit Funds</h2>
+           <h6><center>Min Deposit = NGN 5000</h6>
+            <p>Bank Name: Palmpay</p><p>Account Number: <span onclick="copyText('8900987746')" 
+            style="color:blue;cursor:pointer">8900987746 (click to copy)</span></p><p>Account Name: Earnest Funds</p>
+            <h6><center>Note: After deposit contact our help desk, To submit receipt; <br>inorder to get paid.</h6>`;
+         
+          break;
+          case 'support':
+          html = `<div id="support" class="form-group" >
+               
+                
+                <p><center>For any assistance, click below!!! <p><a href="https://mail.google.com/mail/?view=cm&fs=1&to=Fli-X.cashy@gmail.com" target="_blank">
+                    <i class="fas fa-headset"></i>
+                  
+                  <strong style="color:rgb(208, 255, 0); cursor:pointer;"><center>Contact Help Desk</strong>
+                </a>
+               
+            </div>
+            `;
+         
+          break;
+          
+        case 'withdraw':
+          html = `
+            <h2><center>Withdraw Funds</h2>
+            <input type="number" id="withdrawAmount" min="100" placeholder="Enter amount to withdraw" aria-label="Withdraw amount" />
+            <button id="withdrawBtn" style="margin-top: 15px;">Withdraw</button>
+          `;
+          break;
+          
+        default:
+          html = '<p>Please Wait a minute...</p>';
+      }
+      
+      popupContent.insertAdjacentHTML('beforeend', html);
+      popup.style.display = 'flex';
+      popup.setAttribute('aria-hidden', 'false');
+      // Attach popup buttons handlers
+      setTimeout(() => {
+        // Close button
+        document.getElementById('popupCloseBtn').onclick = closePopup;
+        // Logout button
+        const logoutBtn = document.getElementById('logoutBtn');
+        if (logoutBtn) logoutBtn.onclick = logout;
+        // Upgrade
+        const upgradeBtn = document.getElementById('upgradeBtn');
+        if (upgradeBtn) upgradeBtn.onclick = () => {
+          const plan = document.getElementById('upgradeSelect').value;
+          alert(`(For ${plan} plan to be implemented, Go to the click on the deposit button to send the fund and please wait..after 2 mins)`);
+          closePopup();
+        };
+        // Loan Request
+        const loanBtn = document.getElementById('loanRequestBtn');
+        if (loanBtn) loanBtn.onclick = () => {
+          const amt = parseFloat(document.getElementById('loanAmount').value);
+          if (isNaN(amt) || amt < 100 || amt > 5000) {
+            alert('Please enter a valid loan amount between NGN 100 and NGN 5000.');
+            return;
+          }
+          
+          setTimeout(() => {
+            alert("You need to have atleast 5 referral to access this Feature.");
+              
+            }, 1000);
+           
+        }
+        // Submit Ad
+        const adBtn = document.getElementById('submitAdBtn');
+        if (adBtn) adBtn.onclick = () => {
+          const text = document.getElementById('adText').value.trim();
+          if(!text) {
+            alert('Please write your ad text before submitting.');
+            return;
+          }
+          alert('Ad submitted! We will review it shortly.');
+          closePopup();
+        };
+        // Deposit
+        const depositBtn = document.getElementById('depositBtn');
+        if (depositBtn) depositBtn.onclick = () => {
+          const amt = parseFloat(document.getElementById('depositAmount').value);
+          if(isNaN(amt) || amt < 100) {
+            alert('Please enter a valid deposit amount (minimum NGN 100).');
+            return;
+          }
+          balance += amt;
+          saveBalance(balance);
+          addTransaction('Deposit', amt);
+          alert(`Deposited NGN ${amt}.`);
+          updateDashboard();
+          closePopup();
+        };
+        
+        // Withdraw
+        const withdrawBtn = document.getElementById('withdrawBtn');
+        if (withdrawBtn) withdrawBtn.onclick = () => {
+          const amt = parseFloat(document.getElementById('withdrawAmount').value);
+          if(isNaN(amt) || amt < 10000) {
+            alert('Please enter a valid withdrawal amount (minimum NGN 10000).');
+            return;
+          }
+          if(amt > balance) {
+            alert('Insufficient balance for this withdrawal.');
+            return;
+          }
+          {
+             showNotification("Make Sure you Have atleast 5 referral to Receive NGN " + amount + " To Your Local Bank.");
+            }
+             }
+            showNotification("Your request is being processed for NGN " + amount + "...");
+            
+            }, 2000);
+          balance -= amt;
+          saveBalance(balance);
+          addTransaction('Withdraw', amt);
+          alert(`Withdrew NGN ${amt}.`);
+          updateDashboard();
+          closePopup();
+        };
+      
+
+    
+    // Add transaction record
+    function addTransaction(type, amount) {
+      let history = JSON.parse(localStorage.getItem('transactions')) || [];
+      history.push({date: new Date().toLocaleString(), type, amount});
+      localStorage.setItem('transactions', JSON.stringify(history));
+    }
+    
+    // Close popup
+    function closePopup() {
+      popup.style.display = 'none';
+      popup.setAttribute('aria-hidden', 'true');
+      popupContent.innerHTML = '';
+    }
+    
+    // Logout user
+    function logout() {
+      clearSession();
+      user = null;
+      balance = 0;
+      showLogin();
+      alert('You have been logged out.');
+    }
+    
+    // Navigation toggle
+    navToggleBtn.onclick = () => {
+      if(navDrawer.classList.contains('open')){
+        navDrawer.classList.remove('open');
+        navDrawer.setAttribute('aria-hidden', 'true');
+      } else {
+        navDrawer.classList.add('open');
+        navDrawer.setAttribute('aria-hidden', 'false');
+      }
+    };
+    
+    // Sidebar nav click handler to open popup or inline views
+    navDrawer.addEventListener('click', (e) => {
+      if(e.target.tagName === 'BUTTON'){
+        const key = e.target.dataset.key;
+        if(['account', 'upgrade', 'loan', 'ads', 'transactions', 'winning', 'deposit', 'withdraw'].includes(key)){
+          showPopup(key);
+        }
+      }
+    });
+    
+    // Initial page load
+    window.onload = () => {
+      const sessionUser = getSessionUser();
+      if(sessionUser){
+        let users = getUsers();
+        user = users.find(u => u.username === sessionUser);
+        if(user){
+          balance = getBalance();
+          showDashboard();
+        } else {
+          clearSession();
+          showLogin();
+        }
+      } else {
+        showLogin();
+      }
+    };
+    // Login form submit
+    document.getElementById('loginBtn').onclick = () => {
+      const username = document.getElementById('loginUsername').value.trim();
+      const password = document.getElementById('loginPassword').value;
+      let users = getUsers();
+      let found = users.find(u => u.username === username && u.password === password);
+      if(found){
+        user = found;
+        saveSession(username);
+        balance = getBalance();
+        showDashboard(); // Redirect to Dashboard after successful login
+      } else {
+        alertError('Invalid username or password.');
+      }
+    };
+    // Signup form submit
+    document.getElementById('signUpBtn').onclick = () => {
+      const fullName = document.getElementById('fullName').value.trim();
+      const username = document.getElementById('signUpUsername').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const password = document.getElementById('signUpPassword').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      if(fullName.length < 3){
+        alertError('Full name must be at least 3 characters.');
+        return;
+      }
+      if(!validUsername(username)){
+        alertError('Username must be 3-15 characters, letters, numbers, _ or - only.');
+        return;
+      }
+      if(phone.length < 7){
+        alertError('Please enter a valid phone number.');
+        return;
+      }
+      if(!validPassword(password)){
+        alertError('Password must be at least 6 characters.');
+        return;
+      }
+      if(password !== confirmPassword){
+        alertError('Passwords do not match.');
+        return;
+      }
+      let users = getUsers();
+      if(users.find(u => u.username === username)){
+        alertError('Username already exists.');
+        return;
+      }
+      users.push({fullName, username, phone, password});
+      saveUsers(users);
+      alert('Registration successful! You can now log in.');
+      showLogin(); // Show login page after sign-up
+    };
+  </script>
+</body>
+</html>
